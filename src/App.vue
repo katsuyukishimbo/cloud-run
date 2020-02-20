@@ -1,28 +1,37 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <mwc-drawer hasHeader type="modal" :open="openDrawer">
+    <span slot="title">Drawer Title</span>
+    <span slot="subtitle">subtitle</span>
+    <div class="drawer-content">
+      <p>Drawer content</p>
+      <p><a @click="selectPage('/')">Home</a></p>
+      <p><a @click="selectPage('/prime')">Prime</a></p>
+      <p><a @click="selectPage('/about')">About</a></p>
+    </div>
+    <router-view />
+  </mwc-drawer>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import "@material/mwc-icon-button";
+import "@material/mwc-drawer";
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
+@Component
+export default class AppComponent extends Vue {
+  openDrawer: boolean = false;
+
+  mounted() {
+    this.$router.afterEach(() => {
+      this.openDrawer = false;
+    });
+  }
+
+  selectPage(path: string) {
+    if (path !== this.$router.currentRoute.path) {
+      this.$router.push(path);
+    }
+    return false;
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
